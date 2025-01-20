@@ -1,76 +1,62 @@
 package com.example.SpringBootCrud.Controller;
 
 import com.example.SpringBootCrud.Model.User;
-import com.example.SpringBootCrud.Repository.UserRepository;
+import com.example.SpringBootCrud.Service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api/v1/users/")
 public class UserController {
 
-    UserRepository _userRepository;
+    UserService _userService;
 
-    UserController(UserRepository userRepository){
-        _userRepository=userRepository;
+    UserController(UserService userService){
+        _userService = userService;
     }
 
-    @PostMapping("addSingleUser")
-    public ResponseEntity<User> addUser(@RequestBody User user) throws  Exception{
-        ObjectMapper Obj = new ObjectMapper();
-        User _user=_userRepository.save(user);
-        String jsonStr = Obj.writeValueAsString(user);
-        System.out.println("USER ::"+jsonStr);
+    @PostMapping("AddUser")
+    public ResponseEntity<User> AddUser(@RequestBody User user) throws  Exception{
+        User _user = _userService.AddUser(user);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(user);
+        System.out.println("ADDED USER ::"+jsonString);
         return ResponseEntity.ok(_user);
     }
 
-    @PostMapping("addAllUser")
-    public ResponseEntity<List<User>> addAllUser(@RequestBody List<User> users) throws  Exception{
-        List<User> _user=_userRepository.saveAll(users);
+    @PostMapping("AddAllUsers")
+    public ResponseEntity<List<User>> AddAllUsers(@RequestBody List<User> users){
+        List<User> _user = _userService.AddAllUsers(users);
         return ResponseEntity.ok(_user);
     }
-    @PostMapping("updateUser")
-    public ResponseEntity<User> updateUser(@RequestParam BigInteger id,@RequestBody User users) throws  Exception{
-        Optional<User> _user=_userRepository.findById(id);
-        if(_user.isPresent()) {
-            User user=_user.get();
-            user.setName(users.getName());
-            user.setName(users.getPassword());
-            return new ResponseEntity<>(user,HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
 
-    @GetMapping("getAllUsers")
-    public List<User> getAllUsers(){
-        List<User> _user=new ArrayList<>();
-        _userRepository.findAll().forEach(_user::add);
+    @GetMapping("GetAllUsers")
+    public List<User> GetAllUsers(){
+        List<User> _user = _userService.GetAllUsers();
         return _user;
     }
 
-    @GetMapping("getUserById")
-    public ResponseEntity<User> getUserById(@RequestParam BigInteger Id){
-        Optional<User> _user=_userRepository.findById(Id);
-        if(_user.isPresent()){
-            return new ResponseEntity<>(_user.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @GetMapping("GetUserById")
+    public ResponseEntity<User> GetUserById(@RequestParam BigInteger Id) throws Exception{
+        return _userService.GetUserById(Id);
     }
-    @DeleteMapping("deleteMapping")
-    public String deleteMapping(BigInteger id){
-        _userRepository.deleteById(id);
-        return "RECORD DELETED SUCCESSFULLY";
+
+    @DeleteMapping("DeleteUser")
+    public String DeleteUser(BigInteger Id){
+       return _userService.DeleteUser(Id);
     }
-    @GetMapping("test")
-    public String test(){
-        return "WORKING";
+
+    @GetMapping("TestApi")
+    public String TestApi(){
+        return "API WORKING";
     }
+
+    @PutMapping("UpdateUser")
+    public ResponseEntity<User> UpdateUser(@RequestParam BigInteger Id,@RequestBody User user) throws  Exception{
+        return _userService.UpdateUser(Id,user);
+    }
+
 }

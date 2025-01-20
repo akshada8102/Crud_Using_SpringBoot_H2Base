@@ -2,40 +2,41 @@ package com.example.SpringBootCrud.Model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigInteger;
-import java.net.PasswordAuthentication;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="TABLE_USER")
+@Table(name="UserLogin")
 @ToString
 public class User {
 
     @Id
     @GeneratedValue
-    public BigInteger id;
+   // @Column(Name = "User_Id")
+    public BigInteger userId;
 
     @NonNull
-    public String Name;
+    public String userName;
 
     @NonNull
-    public String Password;
+    public String userPassword;
 
-    public void setName(String Name){
-        this.Name=Name;
-    }
-
-    public void setPassword(String Password){
-        this.Password=Password;
+    public void setUserName(String userName){
+        this.userName=userName;
     }
 
-    public String getName(){
-        return Name;
+    public String getUserName(){
+        return userName;
     }
-    public String getPassword(){
-        return Password;
+
+    public void setUserPassword(String userPassword){
+        this.userPassword=userPassword;
     }
+
+    public String getUserPassword(){
+        return userPassword;
+    }
+
 }
