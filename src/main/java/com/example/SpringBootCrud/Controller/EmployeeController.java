@@ -1,27 +1,22 @@
 package com.example.SpringBootCrud.Controller;
 
-import com.example.SpringBootCrud.Model.Address;
 import com.example.SpringBootCrud.Model.Employee;
-import com.example.SpringBootCrud.Repository.EmployeeRepository;
 import com.example.SpringBootCrud.Service.EmployeeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
-
-import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/employee/")
+@RequestMapping("/api/v1/employees/")
 public class EmployeeController {
 
     @Autowired
     private EmployeeService _employeeService;
 
-    @PostMapping("AddEmployees")
+    @PostMapping
     public ResponseEntity<String> AddEmployees(@RequestBody List<Employee> empData) throws Exception{
         _employeeService.AddEmployee(empData);
         ObjectMapper Obj = new ObjectMapper();
@@ -30,9 +25,9 @@ public class EmployeeController {
         return ResponseEntity.ok("Data saved");
     }
 
-    @GetMapping("GetAllEmployees")
-    public List<Employee> GetAllEmployees(){
-        return _employeeService.GetAllEmployees();
+    @GetMapping("{Id}")
+    public Optional<Employee> GetEmployee(@PathVariable("Id") Long Id){
+        return _employeeService.GetAllEmployee(Id);
     }
 
     @GetMapping("GetEmployeeData")

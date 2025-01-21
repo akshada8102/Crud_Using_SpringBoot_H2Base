@@ -5,6 +5,7 @@ import com.example.SpringBootCrud.Repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -19,8 +20,8 @@ public class EmployeeService {
         _employeeRepository.saveAll(empData);
     }
 
-    public List<Employee> GetAllEmployees(){
-        return _employeeRepository.findAll();
+    public Optional<Employee> GetAllEmployee(Long Id){
+        return _employeeRepository.findById(Id);
     }
 
     public List<Object[]> GetEmployeeData() {
